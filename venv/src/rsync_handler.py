@@ -3,7 +3,7 @@ import logging
 
 
 def call_rsync(source, target, password):
-    cmd = 'rsync -avP {} {}'.format(source, target)
+    cmd = 'rsync -arvP --delete {} {}'.format(source, target)
     logging.info(cmd)
 
     try:
