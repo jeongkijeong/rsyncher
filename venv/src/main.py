@@ -10,19 +10,20 @@ import handler_queue
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    dirPath = sys.argv[1] if len(sys.argv) > 1 else '.'
+    logFile = sys.argv[2]
 
-    path = sys.argv[1] if len(sys.argv) > 1 else '.'
+    logging.basicConfig(filename=logFile, level=logging.INFO, format='%(asctime)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
-    t = handler_queue.EventFilter(path)
+    t = handler_queue.EventFilter(dirPath)
     t.start()
 
-    eventHandler = event_handler.FileEventHandler(t.event_queue)
+    eventHandler = event_handler.FileEventHandler(t.event_queue, logging)
     observer = Observer()
-    observer.schedule(eventHandler, path, recursive=True)
+    observer.schedule(eventHandler, dirPath, recursive=True)
     observer.start()
 
-    logging.info(path)
+    logging.info(dirPath)
     logging.info('rsyncher started')
 
     try:
